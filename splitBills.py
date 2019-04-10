@@ -47,14 +47,32 @@ def getHowMuchPeopleOwe(items):
         eachOwe = itemCost/totalPeople
         for name in people:
             peopleToItems[name] += eachOwe
-    pp(peopleToItems)
+    return peopleToItems
+
+def addTax(peopleToItems, taxPercentage):
+    for k, v in peopleToItems.items():
+        print("Tax needed to add to {} - {}".format(k, (v*taxPercentage)/100))
+        peopleToItems[k] += (v*taxPercentage)/100
+    return peopleToItems
+
+
+def addOtherFees(peopleToItems, otherFees):
+    totalPeople = len(peopleToItems)
+    otherFeesPerPerson = round(sum(v for _, v in otherFees.items())/totalPeople, 2)
+    print("Other fee needed to add to - {}".format(otherFeesPerPerson))
+    for k, v in peopleToItems.items():
+        peopleToItems[k] += otherFeesPerPerson
+    return peopleToItems
+
 
 if __name__ == "__main__":
     #people, lenPeople = getPeople()
-    #subTotal = getSubTotal()
+    subTotal = getSubTotal()
     taxAmount = getTax()
     taxPercentage = calculatePercentage(taxAmount, subTotal)
-    #otherFees = getOtherFees()
-    #items = getItems()
-    peopleToItems = getHowMuchPeopleOwe({"a":4.5,"b":3.75})
-    
+    otherFees = getOtherFees()
+    items = getItems()
+    peopleToItems = getHowMuchPeopleOwe(items)
+    peopleToItems = addTax(peopleToItems, taxPercentage)
+    peopleToItems = addOtherFees(peopleToItems, otherFees)
+    pp(peopleToItems)
