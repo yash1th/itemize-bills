@@ -1,29 +1,9 @@
 from pprint import pprint as pp
 
 
-def getPeople():
-    print("Enter list of people separated by commas -- ")
-    people = [i.strip().lower() for i in input().split(",")]
-    return people, len(people)
-
-
-def getSubTotal():
-    print("Enter Sub total (before tax) : ", end = "")
-    return float(input().strip())
-
-
 def getTax():
     print("Enter tax amount: ",end = "")
     return float(input().strip())
-
-
-def getItems():
-    numberOfItems = int(input("How many items are there : ").strip())
-    items = {}
-    for _ in range(numberOfItems):
-        itemName, itemPrice = input("enter item name, price : ").split(",", 2)
-        items[itemName.strip()] = float(itemPrice.strip())
-    return items
 
 
 def calculatePercentage(num1, num2):
@@ -38,41 +18,44 @@ def getOtherFees():
     return otherFees
 
 
-def getHowMuchPeopleOwe(items):
+def getHowMuchPeopleOwe():
     from collections import defaultdict
     peopleToItems = defaultdict(float)
-    for itemName, itemCost in items.items():
-        people = [name.strip().lower() for name in input(f"Who are involved in {itemName} : ").split(",")]
-        totalPeople = len(people)
-        eachOwe = itemCost/totalPeople
+    numberOfItems = int(input("Enter the total number of items : ").strip())
+    items = defaultdict(float)
+    for _ in range(numberOfItems):
+        itemName, itemPrice = [i.strip() for i in input("Enter item name, item price : ").split(",", 2)]
+        itemPrice = float(itemPrice)
+        items[itemName] = itemPrice
+        people = [name.strip() for name in input(f"Enter people involved in {itemName} : ").split(",")]
+        itemPricePerPerson = itemPrice/len(people)
         for name in people:
-            peopleToItems[name] += eachOwe
-    return peopleToItems
+            peopleToItems[name] += itemPricePerPerson
+    return items, peopleToItems
+
 
 def addTax(peopleToItems, taxPercentage):
     for k, v in peopleToItems.items():
-        print("Tax needed to add to {} - {}".format(k, (v*taxPercentage)/100))
         peopleToItems[k] += (v*taxPercentage)/100
     return peopleToItems
 
 
 def addOtherFees(peopleToItems, otherFees):
     totalPeople = len(peopleToItems)
-    otherFeesPerPerson = round(sum(v for _, v in otherFees.items())/totalPeople, 2)
-    print("Other fee needed to add to - {}".format(otherFeesPerPerson))
+    otherFeesPerPerson = sum(v for _, v in otherFees.items())/totalPeople
+    print("Other fee per person - ", otherFeesPerPerson)
     for k, v in peopleToItems.items():
         peopleToItems[k] += otherFeesPerPerson
     return peopleToItems
 
 
-if __name__ == "__main__":
-    #people, lenPeople = getPeople()
-    subTotal = getSubTotal()
+if __name__ == "__main__":    
+    items, peopleToItems = getHowMuchPeopleOwe()
+    subTotal = sum(v for _, v in items.items())
     taxAmount = getTax()
     taxPercentage = calculatePercentage(taxAmount, subTotal)
-    otherFees = getOtherFees()
-    items = getItems()
-    peopleToItems = getHowMuchPeopleOwe(items)
     peopleToItems = addTax(peopleToItems, taxPercentage)
+    otherFees = getOtherFees() 
     peopleToItems = addOtherFees(peopleToItems, otherFees)
+    peopleToItems = {k:round(v,2) for k, v in peopleToItems.items()}
     pp(peopleToItems)
