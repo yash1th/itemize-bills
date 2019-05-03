@@ -42,7 +42,7 @@ def addTax(peopleToItems, taxPercentage):
 
 def addOtherFees(peopleToItems, otherFees):
     totalPeople = len(peopleToItems)
-    otherFeesPerPerson = sum(v for _, v in otherFees.items())/totalPeople
+    otherFeesPerPerson = sum([v for _, v in otherFees.items()])/totalPeople
     print("Other fee per person - ", otherFeesPerPerson)
     for k, v in peopleToItems.items():
         peopleToItems[k] += otherFeesPerPerson
