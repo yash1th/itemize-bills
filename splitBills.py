@@ -1,9 +1,6 @@
 from tabulate import tabulate
-from decimal import Decimal, ROUND_UP, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP
 
-
-# TODO - print neat tables
-# TODO - round amounts
 # TODO - write unit tests
 
 
