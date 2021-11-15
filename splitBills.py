@@ -2,6 +2,7 @@ from tabulate import tabulate
 from decimal import Decimal, ROUND_HALF_UP
 
 # TODO - write unit tests
+# TODO - better rounding of numbers
 
 
 class Item:
